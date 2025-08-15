@@ -14,7 +14,7 @@ int warningCount = 0;
 
 // Konstanta kalibrasi
 const float RL = 10.0;
-const float R0 = 1.56;
+     float R0 = 1.56;
 
 // Variabel untuk non-blocking buzzer
 unsigned long previousMillis = 0;
@@ -60,7 +60,7 @@ void setup() {
 void loop() {
   // Baca sensor dan hitung PPM
   static unsigned long lastSensorRead = 0;
-  if (millis() - lastSensorRead >= 1000) { // Baca sensor setiap 1 detik
+  if (millis() - lastSensorRead >= 3000) { // Baca sensor setiap 1 detik
     lastSensorRead = millis();
     
     int nilaiSensor = analogRead(sensorGasPin);
@@ -68,7 +68,7 @@ void loop() {
     float RS = ((5.0 * RL) / voltage) - RL;
     float ratio = RS / R0;
     
-    ppm = pow((ratio / 0.5), -1.5) * 100;
+    ppm = pow((ratio / 1), -1.5) * 100;
     if(ppm < 0) ppm = 0;
 
     // Update LCD
@@ -170,14 +170,14 @@ void calibrateSensor() {
   }
   
   float avgRS = total / 50;
-  float newR0 = avgRS / 0.5;
+  float    R0 = avgRS / 1 ;
   lcd.clear();
   lcd.setCursor(0, 0);
   lcd.print("Calibration");
   lcd.setCursor(0, 1);
   lcd.print("Complete!");
   Serial.print("Nilai R0 kalibrasi: ");
-  Serial.println(newR0);
+  Serial.println(R0);
   delay(2000);
 }
 
@@ -204,3 +204,4 @@ void inisialisasiSDCard(){
     }
   }
 }
+
